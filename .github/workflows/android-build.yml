@@ -15,25 +15,24 @@ jobs:
       - name: Checkout Source
         uses: actions/checkout@v4
 
-      - name: Setup JDK 17
+      - name: Setup JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: '17'
+
+      - name: Verify Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          ls "$ANDROID_HOME/platforms"
+          ls "$ANDROID_HOME/build-tools"
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: 8.11.1
+          gradle-version: '8.11.1'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android SDK
-        run: |
-          sdkmanager "platforms;android-35" "build-tools;35.0.0"
-
-      - name: Build Debug APK
+      - name: Build APK
         run: gradle --no-daemon assembleDebug
 
       - name: Upload APK
@@ -41,4 +40,3 @@ jobs:
         with:
           name: N7X-Universal-Translator
           path: app/build/outputs/apk/debug/app-debug.apk
-          
